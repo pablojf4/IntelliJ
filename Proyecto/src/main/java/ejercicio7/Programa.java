@@ -9,7 +9,7 @@ public class Programa {
     private static final String USUARIO = "sakilauser";
     private static final String PASSWORD = "pwdsakilauser";
     private static final String QUERY = """
-            select rental_date, nvl(return_date, 'Pendiente') as fechaDevolucion, f.title
+            select rental_date, nvl(return_date, 'Pendiente') fechaDevolucion, f.title
             from rental r
             inner join sakila.inventory i on r.inventory_id = i.inventory_id
             inner join sakila.film f on i.film_id = f.film_id
@@ -29,13 +29,19 @@ public class Programa {
 
                 ps.setInt(1, idCliente);
                 try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        Date fecha= rs.getDate("rental_date");
-                        Date fechaDevolucion= rs.getDate("fechaDevolucion");
-                        String titulo= rs.getString("title");
-                        System.out.printf("%s\n%s\n%s\n", fecha, fechaDevolucion, titulo);
 
+                    if(!rs.isBeforeFirst()){
+                        System.out.println("No tiene alquileres");
+                    }else{
+                        while (rs.next()) {
+                            Date fecha= rs.getDate("rental_date");
+                            Date fechaDevolucion= rs.getDate("fechaDevolucion");
+                            String titulo= rs.getString("title");
+                            System.out.printf("%s\n%s\n%s\n", fecha, fechaDevolucion, titulo);
+
+                        }
                     }
+
 
                 }
 
